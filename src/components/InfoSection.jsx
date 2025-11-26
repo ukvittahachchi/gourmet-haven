@@ -23,9 +23,9 @@ const InfoSection = () => {
                             text-base lg:text-lg text-gray-600 leading-relaxed lg:leading-loose
                             max-w-md
                         ">
-                            Fresh mozzarella, tomatoes, basil. Our journey began with a passion for simple,
-                            authentic flavors. We believe in the power of fresh ingredients to create
-                            unforgettable dining experiences.
+                            Gourmet Heaven was born from a love for real Italian cooking.
+We blend fresh ingredients, timeless recipes, and warm hospitality to create dishes that feel like home.
+From rich pastas to handcrafted pizzas, every bite brings you closer to the heart of Italy.
                         </p>
                     </div>
 
@@ -47,9 +47,10 @@ const InfoSection = () => {
                             text-base lg:text-lg text-gray-600 leading-relaxed lg:leading-loose
                             max-w-md
                         ">
-                            Fresh mozzarella, tomatoes, basil. Located in the heart of the city,
-                            Gourmet Haven offers a sanctuary for food lovers. Our chefs bring years
-                            of culinary expertise to your table.
+                            Gourmet Heaven is a place where authentic Italian flavors come alive.
+We craft every dish with fresh ingredients, traditional recipes, and a passion for warm, homemade cooking.
+From comforting pastas to crispy wood-fired pizzas, we bring the true taste of Italy to your table.
+At Gourmet Heaven, every meal is a moment to enjoy, relax, and feel at home.
                         </p>
                     </div>
                 </div>

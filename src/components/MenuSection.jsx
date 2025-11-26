@@ -3,6 +3,7 @@ import caprese from '../assets/caprese.png';
 import steak from '../assets/steak.png';
 import platter from '../assets/platter.png';
 
+// Extended menu items with more variety
 const menuItems = [
     {
         id: 1,
@@ -31,18 +32,63 @@ const menuItems = [
         description: 'Assorted cheeses, olives, cured meats',
         price: 'Rs 2600',
         image: platter
+    },
+    {
+        id: 5,
+        title: 'TRUFFLE PASTA',
+        description: 'Fresh pasta with black truffle sauce',
+        price: 'Rs 3200',
+        image: caprese
+    },
+    {
+        id: 6,
+        title: 'SEAFOOD RISOTTO',
+        description: 'Creamy risotto with mixed seafood',
+        price: 'Rs 2800',
+        image: steak
+    },
+    {
+        id: 7,
+        title: 'VEGAN BOWL',
+        description: 'Quinoa, roasted vegetables, tahini dressing',
+        price: 'Rs 2200',
+        image: platter
+    },
+    {
+        id: 8,
+        title: 'CHOCOLATE SOUFFLÉ',
+        description: 'Warm chocolate dessert with vanilla ice cream',
+        price: 'Rs 1800',
+        image: caprese
+    },
+    {
+        id: 9,
+        title: 'SUSHI PLATTER',
+        description: 'Assorted sushi with wasabi and ginger',
+        price: 'Rs 3500',
+        image: steak
+    },
+    {
+        id: 10,
+        title: 'ARTISAN BURGER',
+        description: 'Angus beef, aged cheddar, brioche bun',
+        price: 'Rs 2700',
+        image: platter
     }
 ];
 
 const MenuSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [itemsPerView, setItemsPerView] = useState(1);
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     // Determine how many items to show based on screen size
     useEffect(() => {
         const updateItemsPerView = () => {
-            if (window.innerWidth >= 1024) {
-                setItemsPerView(4); // lg screens - show 4 items
+            if (window.innerWidth >= 1280) {
+                setItemsPerView(4); // xl screens - show 4 items
+            } else if (window.innerWidth >= 1024) {
+                setItemsPerView(3); // lg screens - show 3 items
             } else if (window.innerWidth >= 768) {
                 setItemsPerView(2); // md screens - show 2 items
             } else {
@@ -59,37 +105,40 @@ const MenuSection = () => {
     // Auto slide every 5 seconds
     useEffect(() => {
         const interval = setInterval(() => {
-            nextSlide();
+            if (!isTransitioning) {
+                nextSlide();
+            }
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [currentSlide, itemsPerView]);
+    }, [currentSlide, itemsPerView, isTransitioning]);
 
     const nextSlide = () => {
+        setIsTransitioning(true);
         setCurrentSlide((prev) => 
             prev >= menuItems.length - itemsPerView ? 0 : prev + 1
         );
+        setTimeout(() => setIsTransitioning(false), 500);
     };
 
     const prevSlide = () => {
+        setIsTransitioning(true);
         setCurrentSlide((prev) => 
             prev <= 0 ? menuItems.length - itemsPerView : prev - 1
         );
+        setTimeout(() => setIsTransitioning(false), 500);
     };
 
     const goToSlide = (index) => {
-        setCurrentSlide(index);
+        if (!isTransitioning && index >= 0 && index <= menuItems.length - itemsPerView) {
+            setIsTransitioning(true);
+            setCurrentSlide(index);
+            setTimeout(() => setIsTransitioning(false), 500);
+        }
     };
 
-    // Calculate visible items based on current slide and items per view
-    const getVisibleItems = () => {
-        const visibleItems = [];
-        for (let i = 0; i < itemsPerView; i++) {
-            const itemIndex = (currentSlide + i) % menuItems.length;
-            visibleItems.push(menuItems[itemIndex]);
-        }
-        return visibleItems;
-    };
+    // Calculate total number of slides
+    const totalSlides = Math.max(1, menuItems.length - itemsPerView + 1);
 
     return (
         <section className="bg-white py-16 md:py-20 lg:py-24" id="menu">
@@ -109,13 +158,18 @@ const MenuSection = () => {
                     {/* Navigation Arrows */}
                     <button
                         onClick={prevSlide}
-                        className="
+                        disabled={isTransitioning}
+                        className={`
                             absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4
                             bg-white rounded-full w-10 h-10 shadow-lg
                             flex items-center justify-center
-                            hover:bg-gray-50 transition-colors duration-300
+                            transition-all duration-300
                             z-10
-                        "
+                            ${isTransitioning 
+                                ? 'opacity-50 cursor-not-allowed' 
+                                : 'hover:bg-gray-50 hover:scale-110 cursor-pointer'
+                            }
+                        `}
                         aria-label="Previous slide"
                     >
                         <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,13 +179,18 @@ const MenuSection = () => {
 
                     <button
                         onClick={nextSlide}
-                        className="
+                        disabled={isTransitioning}
+                        className={`
                             absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4
                             bg-white rounded-full w-10 h-10 shadow-lg
                             flex items-center justify-center
-                            hover:bg-gray-50 transition-colors duration-300
+                            transition-all duration-300
                             z-10
-                        "
+                            ${isTransitioning 
+                                ? 'opacity-50 cursor-not-allowed' 
+                                : 'hover:bg-gray-50 hover:scale-110 cursor-pointer'
+                            }
+                        `}
                         aria-label="Next slide"
                     >
                         <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,10 +201,10 @@ const MenuSection = () => {
                     {/* Slideshow Container */}
                     <div className="overflow-hidden">
                         <div 
-                            className="
+                            className={`
                                 flex transition-transform duration-500 ease-in-out
-                                gap-6 lg:gap-8
-                            "
+                                gap-4 sm:gap-6 lg:gap-8
+                            `}
                             style={{
                                 transform: `translateX(-${currentSlide * (100 / itemsPerView)}%)`
                             }}
@@ -153,52 +212,54 @@ const MenuSection = () => {
                             {menuItems.map((item) => (
                                 <div 
                                     key={item.id}
-                                    className="
+                                    className={`
                                         flex-shrink-0
-                                        bg-gray-200 overflow-hidden flex flex-col
-                                        transition-all duration-300 ease-in-out
+                                        bg-white border border-gray-200 rounded-lg overflow-hidden 
+                                        flex flex-col shadow-md
+                                        transition-all duration-500 ease-in-out
                                         hover:-translate-y-2 hover:shadow-xl
                                         group cursor-pointer
                                         w-full
-                                    "
+                                    `}
                                     style={{
-                                        width: `${100 / itemsPerView}%`
+                                        width: `${100 / itemsPerView}%`,
+                                        minWidth: `${100 / itemsPerView}%`
                                     }}
                                 >
                                     {/* Image Container */}
-                                    <div className="h-64 overflow-hidden">
+                                    <div className="h-48 sm:h-56 md:h-64 overflow-hidden">
                                         <img 
                                             src={item.image} 
                                             alt={item.title}
                                             className="
                                                 w-full h-full object-cover
-                                                transition-transform duration-500 ease-in-out
+                                                transition-transform duration-700 ease-in-out
                                                 group-hover:scale-110
                                             "
                                         />
                                     </div>
                                     
                                     {/* Content */}
-                                    <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                    <div className="p-4 sm:p-5 lg:p-6 flex flex-col flex-grow">
                                         <h3 className="
-                                            text-lg font-normal tracking-wider 
-                                            mb-3 text-gray-800 uppercase
-                                            text-center
+                                            text-base sm:text-lg font-normal tracking-wider 
+                                            mb-2 sm:mb-3 text-gray-800 uppercase
+                                            text-center line-clamp-2
                                         ">
                                             {item.title}
                                         </h3>
                                         
                                         <p className="
-                                            text-gray-700 text-base leading-relaxed 
-                                            mb-4 lg:mb-6 font-serif text-center
-                                            flex-grow
+                                            text-gray-600 text-sm sm:text-base leading-relaxed 
+                                            mb-3 sm:mb-4 lg:mb-6 font-serif text-center
+                                            flex-grow line-clamp-2
                                         ">
                                             {item.description}
                                         </p>
                                         
                                         <div className="
-                                            text-lg font-bold text-amber-600 
-                                            font-serif text-right
+                                            text-base sm:text-lg font-bold text-amber-600 
+                                            font-serif text-center
                                         ">
                                             {item.price}
                                         </div>
@@ -210,22 +271,31 @@ const MenuSection = () => {
                 </div>
 
                 {/* Dots Indicator */}
-                <div className="flex justify-center space-x-3 mt-8 lg:mt-12">
-                    {Array.from({ length: menuItems.length - itemsPerView + 1 }).map((_, index) => (
+                <div className="flex justify-center space-x-2 sm:space-x-3 mt-8 lg:mt-12">
+                    {Array.from({ length: totalSlides }).map((_, index) => (
                         <button
                             key={index}
                             onClick={() => goToSlide(index)}
+                            disabled={isTransitioning}
                             className={`
-                                w-3 h-3 rounded-full cursor-pointer
-                                transition-colors duration-300
+                                w-2 h-2 sm:w-3 sm:h-3 rounded-full cursor-pointer
+                                transition-all duration-300
                                 ${index === currentSlide 
-                                    ? 'bg-gray-600' 
+                                    ? 'bg-gray-800 scale-125' 
                                     : 'bg-gray-300 hover:bg-gray-400'
                                 }
+                                ${isTransitioning ? 'cursor-not-allowed' : ''}
                             `}
                             aria-label={`Go to slide ${index + 1}`}
                         />
                     ))}
+                </div>
+
+                {/* Slide Counter */}
+                <div className="text-center mt-4">
+                    <span className="text-sm text-gray-500">
+                        {currentSlide + 1} / {totalSlides}
+                    </span>
                 </div>
             </div>
         </section>

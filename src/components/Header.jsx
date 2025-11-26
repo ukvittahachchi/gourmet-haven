@@ -1,47 +1,131 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X, Utensils } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show header when scrolled down more than 100px
+      if (window.scrollY > 100) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Function to handle smooth scrolling to sections
+  const scrollToSection = (sectionId) => {
+    if (sectionId === 'home') {
+      // Scroll to top for home
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // Scroll to specific section
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+    // Close mobile menu after clicking a link
+    setIsMenuOpen(false);
+  };
 
   return (
-    // Increased py-6 to py-8 for more spacing from the top
-    <header className="absolute top-0 left-0 w-full z-50 px-6 py-8 md:px-12">
+    <header className={`fixed top-0 left-0 w-full z-50 px-6 py-4 md:px-12 transition-all duration-500 ${
+      isScrolled 
+        ? 'bg-white/95 backdrop-blur-md shadow-lg py-3' 
+        : 'bg-transparent py-8'
+    }`}>
       
       {/* Glassmorphism Container */}
-      {/* Increased py-3 to py-5 for a taller/larger bar */}
-      <nav className="mx-auto max-w-7xl bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-8 py-5 flex items-center justify-between shadow-2xl">
+      <nav className={`mx-auto max-w-7xl border rounded-xl px-8 py-4 flex items-center justify-between transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white/5 border-white/10 shadow-xl'
+          : 'bg-white/10 backdrop-blur-md border-white/20 shadow-2xl'
+      }`}>
         
-        {/* Logo Section */}
-        <div className="flex items-center gap-3">
-          {/* Changed color to text-white and increased size to w-8 h-8 */}
-          <Utensils className="w-8 h-8 text-white" />
-          {/* Changed text to white and increased text size to 2xl */}
-          <span className="text-2xl tracking-widest font-light text-white uppercase">
+        {/* Logo Section - Also clickable to go home */}
+        <button 
+          onClick={() => scrollToSection('home')}
+          className="flex items-center gap-3 focus:outline-none"
+        >
+          <Utensils className={`w-8 h-8 transition-colors duration-300 ${
+            isScrolled ? 'text-gray-800' : 'text-white'
+          }`} />
+          <span className={`text-2xl tracking-widest font-light uppercase transition-colors duration-300 ${
+            isScrolled ? 'text-gray-800' : 'text-white'
+          }`}>
             GOURMENT HEVEN
           </span>
-        </div>
+        </button>
 
         {/* Desktop Navigation */}
-        {/* Changed text color to white */}
-        <div className="hidden md:flex items-center gap-10 font-medium text-white text-lg">
-          <a href="#" className="hover:text-[#ea8c36] transition-colors">Home</a>
-          <a href="#" className="hover:text-[#ea8c36] transition-colors">Contact</a>
-          <a href="#" className="hover:text-[#ea8c36] transition-colors">About</a>
-          <a href="#" className="hover:text-[#ea8c36] transition-colors">Menu</a>
+        <div className="hidden md:flex items-center gap-10 font-medium text-lg">
+          <button 
+            onClick={() => scrollToSection('home')}
+            className={`transition-colors duration-300 ${
+              isScrolled ? 'text-gray-700 hover:text-[#ea8c36]' : 'text-white hover:text-[#ea8c36]'
+            }`}
+          >
+            Home
+          </button>
+          <button 
+            onClick={() => scrollToSection('about')}
+            className={`transition-colors duration-300 ${
+              isScrolled ? 'text-gray-700 hover:text-[#ea8c36]' : 'text-white hover:text-[#ea8c36]'
+            }`}
+          >
+            About
+          </button>
+          <button 
+            onClick={() => scrollToSection('menu')}
+            className={`transition-colors duration-300 ${
+              isScrolled ? 'text-gray-700 hover:text-[#ea8c36]' : 'text-white hover:text-[#ea8c36]'
+            }`}
+          >
+            Menu
+          </button>
+          <button 
+            onClick={() => scrollToSection('contact')}
+            className={`transition-colors duration-300 ${
+              isScrolled ? 'text-gray-700 hover:text-[#ea8c36]' : 'text-white hover:text-[#ea8c36]'
+            }`}
+          >
+            Contact
+          </button>
         </div>
 
         {/* CTA Button */}
         <div className="hidden md:block">
-          {/* Increased padding for a larger button */}
-          <button className="bg-[#ea8c36] hover:bg-[#d67d2a] text-white px-8 py-3 rounded-full font-medium transition-all shadow-md text-lg">
+          <button 
+            onClick={() => scrollToSection('reservations')}
+            className="bg-[#ea8c36] hover:bg-[#d67d2a] text-white px-8 py-3 rounded-full font-medium transition-all shadow-md text-lg"
+          >
             Reserve
           </button>
         </div>
 
         {/* Mobile Menu Toggle */}
         <button 
-          className="md:hidden text-white"
+          className={`md:hidden transition-colors duration-300 ${
+            isScrolled ? 'text-gray-800' : 'text-white'
+          }`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
@@ -50,13 +134,35 @@ const Header = () => {
 
       {/* Mobile Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-32 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-8 shadow-xl flex flex-col gap-6 items-center z-50">
-          {/* Note: Text here remains dark because the mobile background is white/glass */}
-          <a href="#" className="text-gray-800 text-xl font-medium">Home</a>
-          <a href="#" className="text-gray-800 text-xl font-medium">Contact</a>
-          <a href="#" className="text-gray-800 text-xl font-medium">About</a>
-          <a href="#" className="text-gray-800 text-xl font-medium">Menu</a>
-          <button className="bg-[#ea8c36] text-white px-10 py-3 rounded-full w-full text-lg">
+        <div className="md:hidden absolute top-24 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-8 shadow-xl flex flex-col gap-6 items-center z-50">
+          <button 
+            onClick={() => scrollToSection('home')}
+            className="text-gray-800 text-xl font-medium w-full text-center"
+          >
+            Home
+          </button>
+          <button 
+            onClick={() => scrollToSection('about')}
+            className="text-gray-800 text-xl font-medium w-full text-center"
+          >
+            About
+          </button>
+          <button 
+            onClick={() => scrollToSection('menu')}
+            className="text-gray-800 text-xl font-medium w-full text-center"
+          >
+            Menu
+          </button>
+          <button 
+            onClick={() => scrollToSection('contact')}
+            className="text-gray-800 text-xl font-medium w-full text-center"
+          >
+            Contact
+          </button>
+          <button 
+            onClick={() => scrollToSection('reservations')}
+            className="bg-[#ea8c36] text-white px-10 py-3 rounded-full w-full text-lg"
+          >
             Reserve
           </button>
         </div>

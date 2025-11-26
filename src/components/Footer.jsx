@@ -26,7 +26,7 @@ const Footer = () => {
                                 className="w-10 h-10 bg-pink-600 rounded flex items-center justify-center text-white transition-all duration-300 hover:-translate-y-1 hover:brightness-110 hover:shadow-lg"
                                 aria-label="Instagram"
                             >
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
@@ -58,7 +58,7 @@ const Footer = () => {
                         <h3 className="text-xl font-light tracking-wide uppercase mb-5">
                             CONTACT US
                         </h3>
-                        <div className="w-24 h-0.5 bg-white mb-5 ml-auto lg:ml-0 lg:mr-0"></div>
+                        <div className="w-24 h-0.5 bg-white mb-5 mx-auto lg:ml-auto lg:mr-0"></div>
                         <ul className="space-y-4 text-gray-300">
                             <li className="flex items-center justify-center lg:justify-end gap-3">
                                 <span className="text-lg">📍</span>
@@ -66,11 +66,11 @@ const Footer = () => {
                             </li>
                             <li className="flex items-center justify-center lg:justify-end gap-3">
                                 <span className="text-lg">📞</span>
-                                <span>hello@utiaes.com</span>
+                                <span>+94 11 2152 262</span>
                             </li>
                             <li className="flex items-center justify-center lg:justify-end gap-3">
                                 <span className="text-lg">✉️</span>
-                                <span>+94 11 2152 262</span>
+                                <span>hello@utiaes.com</span>
                             </li>
                         </ul>
                     </div>
