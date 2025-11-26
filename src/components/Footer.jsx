@@ -70,7 +70,7 @@ const Footer = () => {
                             </li>
                             <li className="flex items-center justify-center lg:justify-end gap-3">
                                 <span className="text-lg">✉️</span>
-                                <span>hello@utiaes.com</span>
+                                <span>hello@GOURMETHAVEN.com</span>
                             </li>
                         </ul>
                     </div>
